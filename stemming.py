@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 28 20:42:49 2020
+Created on Wed Oct 28 21:38:48 2020
 
 @author: andrewak11
 """
-
 import nltk
-nltk.download()
+from nltk.stem import PorterStemmer
+from  nltk.corpus import stopwords
+
 
 para = """I have three visions for India. In 3000 years of our history, people from all over 
                the world have come and invaded us, captured our lands, conquered our minds. 
@@ -32,16 +33,15 @@ para = """I have three visions for India. In 3000 years of our history, people f
                space, Professor Satish Dhawan, who succeeded him and Dr. Brahm Prakash, father of nuclear material.
                I was lucky to have worked with all three of them closely and consider this the great opportunity of my life. 
                I see four milestones in my career"""
-
-
-# tokenize sentences
+               
+# tokenizing sentences
 sentences = nltk.sent_tokenize(para)
+# initiating porter
+stemmer = PorterStemmer()
 
-#tokenize words
-words = nltk.word_tokenize(para)
-
-
-
-
-
-
+# stemming process
+for i in range(len(sentences)):
+    words = nltk.word_tokenize(sentences[i])
+    words = [stemmer.stem(word) for word in words if word not in set(stopwords.words('english'))]
+    sentences[i] = ' '.join(words)
+    

@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 28 20:42:49 2020
+Created on Thu Oct 29 00:28:17 2020
 
 @author: andrewak11
 """
 
 import nltk
-nltk.download()
 
 para = """I have three visions for India. In 3000 years of our history, people from all over 
                the world have come and invaded us, captured our lands, conquered our minds. 
@@ -33,15 +32,27 @@ para = """I have three visions for India. In 3000 years of our history, people f
                I was lucky to have worked with all three of them closely and consider this the great opportunity of my life. 
                I see four milestones in my career"""
 
+# cleaning the text
+import re
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 
-# tokenize sentences
+ps = PorterStemmer()
+wordnet = WordNetLemmatizer()
+
 sentences = nltk.sent_tokenize(para)
+corpus = []
 
-#tokenize words
-words = nltk.word_tokenize(para)
-
-
-
-
-
-
+for i in range(len(sentences)):
+    review = re.sub('[^a-zA-Z]',' ',sentences[i])
+    review = review.lower()
+    review = review.split()
+    review = [wordnet.lemmatize(word) for word in review if word not in set(stopwords.words('english'))]
+    review = ' '.join(review)
+    corpus.append(review)
+    
+# creating the TF-IDF model
+from sklearn.feature_extraction.text import TfidfVectorizer
+v = TfidfVectorizer()
+X  = v.fit_transform(corpus).toarray()    
